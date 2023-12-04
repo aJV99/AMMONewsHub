@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if page == 'register' %}
+    <div class="container mt-5 mb-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h1 class="text-center">Register User</h1>
+                    </div>
+                    <div class="card-body">
+                        <form action="{% url 'api:register' %}" method="POST" class="my-4">
+                            {% csrf_token %}
+                            
+                            <div class="form-group mb-3">
+                                {{ form.username.label_tag }}
+                                {{ form.username }}
+                                {% if form.username.errors %}
+                                    <div class="invalid-feedback d-block">{{ form.username.errors }}</div>
+                                {% endif %}
+                            </div>
+                        
+                            <div class="form-group mb-3">
+                                {{ form.email.label_tag }}
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                    <div class="invalid-feedback d-block">{{ form.email.errors }}</div>
+                                {% endif %}
+                            </div>
+                        
+                            <div class="form-group mb-3">
+                                {{ form.password1.label_tag }}
+                                {{ form.password1 }}
+                                {% if form.password1.errors %}
+                                    <div class="invalid-feedback d-block">{{ form.password1.errors }}</div>
+                                {% endif %}
+                            </div>
+                        
+                            <div class="form-group mb-3">
+                                {{ form.password2.label_tag }}
+                                {{ form.password2 }}
+                                {% if form.password2.errors %}
+                                    <div class="invalid-feedback d-block">{{ form.password2.errors }}</div>
+                                {% endif %}
+                            </div>
+                        
+                            <button type="submit" class="btn btn-primary">Register User</button>
+                            <p>Already have an account? <a href="{% url 'api:login' %}">Log in</a></p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% else %}
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h1 class="text-center">Login Here!</h1>
+                    Errors: {{ form.errors }}
+                    {{form.non_field_errors}}
+                </div>
+                <div class="card-body">
+                    <form action="{% url 'api:login' %}" method="POST">
+                        {% csrf_token %}
+                        <!-- <div class="form-group mb-3">
+                            <label for="">Username</label>
+                            <input type="text" class="form-control" name="username" placeholder="Username">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="">Password</label>
+                            <input type="password" class="form-control" name="password" placeholder="Enter password">
+                        </div> -->
+                        <div class="form-group mb-3">
+                            {{ form.username.label_tag }}
+                            {{ form.username }}
+                            {% if form.username.errors %}
+                                <div class="invalid-feedback d-block">{{ form.username.errors }}</div>
+                            {% endif %}
+                        </div>
+                    
+                        <div class="form-group mb-3">
+                            {{ form.password.label_tag }}
+                            {{ form.password }}
+                            {% if form.password.errors %}
+                                <div class="invalid-feedback d-block">{{ form.password.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <input type="submit" value="Login" class="btn btn-primary">
+                    
+                        <p>Don't have an account? <a href="{% url 'api:register' %}">Sign Up</a></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endif %}
+
+{% endblock content %}
