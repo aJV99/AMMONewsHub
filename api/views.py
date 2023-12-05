@@ -62,10 +62,15 @@ def loginUser(request):
     return render(request, 'api/spa/login_register.html', {'form': form})
 
 #LOGOUT VIEW
+# def logoutUser(request):
+#     logout(request)
+#     messages.error(request, 'User was successfully logged out')
+#     return redirect('api:login')
+
 def logoutUser(request):
     logout(request)
-    messages.error(request, 'User was successfully logged out')
-    return redirect('api:login')
+    # Instead of redirecting, return a JSON response
+    return JsonResponse({'success': True, 'message': 'User was successfully logged out'})
 
 
 #REGISTER VIEW
