@@ -77,7 +77,7 @@ def registerUser(request):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.username = user.username.lower()
+            # user.username = user.username.lower()
             user.save()
 
             messages.success(request, 'User account was created!')
@@ -94,6 +94,20 @@ def registerUser(request):
     }
 
     return render(request, 'api/spa/login_register.html', context)
+
+
+
+def get_profile(request):
+    if request.user.is_authenticated:
+        profile = Profile.objects.get(user=request.user)
+        return JsonResponse({
+            'username': request.user.username,
+            'email': request.user.email,
+            'full_name': profile.full_name,
+            'bio': profile.bio,
+            'image': profile.image.url if profile.image else None,
+        })
+    return JsonResponse({'error': 'Not authenticated'}, status=401)
 
 
 #PROFILES VIEW
