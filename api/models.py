@@ -28,7 +28,11 @@ class Profile(models.Model):
     def __str__(self):
         return self.full_name
 
-
+class Article(models.Model):
+    Article_title = models.CharField(max_length=200)
+    Article_summary = models.CharField(max_length=200)
+    Article_category = models.CharField(max_length=200)
+    Article_date = models.DateField()
 
 '''
 Automatically create a profile for a user whenever they 
