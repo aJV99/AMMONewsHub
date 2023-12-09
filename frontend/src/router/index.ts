@@ -7,6 +7,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import MainPage from '../pages/MainPage.vue';
 import OtherPage from '../pages/OtherPage.vue';
 import ProfilePage from '../pages/ProfilePage.vue';
+import { useArticleStore } from '../stores/articleStore';
 
 let base = (import.meta.env.MODE == 'development') ? import.meta.env.BASE_URL : ''
 
@@ -17,10 +18,21 @@ const router = createRouter({
     history: createWebHistory(base),
     routes: [
         { path: '/', redirect: { name: 'Main Page' } },
-        { path: '/main', name: 'Main Page', component: MainPage },
+        { 
+            path: '/main', 
+            name: 'Main Page', 
+            component: MainPage,
+            beforeEnter: async (_to, _from, next) => {
+                const articleStore = useArticleStore();
+                if (!articleStore.Articles) {
+                    await articleStore.fetchArticles();
+                }
+                next();
+            }
+        },
         { path: '/other/', name: 'Other Page', component: OtherPage },
         { path: '/profile', name: 'Profile Page', component: ProfilePage },
     ]
-})
+});
 
-export default router
+export default router;

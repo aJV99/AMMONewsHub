@@ -10,14 +10,17 @@ export const useArticleStore = defineStore('articles', () => {
         try {
             const response = await fetch('/articles/');
             if (response.ok) {
-                const data: Article[] = await response.json();
+                const jsonResponse = await response.json();
+                const data: Article[] = jsonResponse.Articles;
                 console.log('Fetched Articles:', data)
                 Articles.value = data;
             } else {
                 // Handle errors
+                console.error('Error fetching articles:', response.statusText);
             }
         } catch (error) {
             // Handle errors
+            console.error('Error in fetchArticles:', error);
         }
     }
 
