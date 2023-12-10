@@ -9,25 +9,24 @@
   </select>
   <p>{{ console.log(filter) }}</p>
   <div v-if="filter !== null">
-    <div v-for="article in Articles" :key="article.id" class="container border border-dark text-center">
+    <div v-for="article in Articles" :key="article.id" class="container text-center  w-25">
       
-        <div v-if="filter == article.Article_category">
-          <p>{{ article.id }}</p>
+        <div v-if="filter == article.Article_category" class="mb-5 border border-dark">
           <p class="font-weight-bold">{{ article.Article_title }}</p>
           <p>{{ article.Article_summary }}</p>
           <p>{{ article.Article_category }}</p>
-          <p>{{ article.Aricle_date }}</p>  
+          <p class="font-italic">{{ article.Article_date }}</p>  
         </div>
       </div>
   </div>
 
   <div v-else>
-    <div v-for="article in Articles" :key="article.id" class="container border border-dark text-center">
+    <div v-for="article in Articles" :key="article.id" class="container border border-dark text-center mb-5 w-25">
         <p>{{ article.id }}</p>
         <p class="font-weight-bold">{{ article.Article_title }}</p>
         <p>{{ article.Article_summary }}</p>
         <p>{{ article.Article_category }}</p>
-        <p>{{ article.Aricle_date }}</p>  
+        <p class="font-italic">{{ article.Article_date }}</p>  
     </div>
 
   </div>
