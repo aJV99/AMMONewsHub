@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 
-from .models import User, Profile
+from .models import User, Profile, Article
 from .forms import CustomUserCreationForm, CustomUserLoginForm
 
 def main_spa(request: HttpRequest) -> HttpResponse:
@@ -114,6 +114,15 @@ def get_profile(request):
         })
     return JsonResponse({'error': 'Not authenticated'}, status=401)
 
+def get_articles(request):
+   
+    Articles = []
+    for article in Article.objects.all().values():
+        Articles.append(article)
+    return JsonResponse({
+        "Articles": Articles
+    })
+        
 
 #PROFILES VIEW
 # def profiles(request):
