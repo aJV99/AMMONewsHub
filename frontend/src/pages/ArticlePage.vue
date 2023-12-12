@@ -1,6 +1,4 @@
 <template>
-
-  <h1>HELLOOO</h1>
   <div class="h1">
     {{ title }}
   </div>
@@ -117,7 +115,7 @@ export default defineComponent({
 
     return {
       Articles: articleStore.Articles,
-      title: "Main Page",
+      title: "Article Page",
     };
   },
   data(){
