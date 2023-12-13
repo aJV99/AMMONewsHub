@@ -12,6 +12,7 @@
     <div v-for="article in Articles" :key="article.id" class="container text-center  w-25">
       
         <div v-if="filter == article.Article_category" class="mb-5 border border-dark">
+          <p>{{ article.id }}</p>
           <p class="font-weight-bold">{{ article.Article_title }}</p>
           <p>{{ article.Article_summary }}</p>
           <p>{{ article.Article_category }}</p>
@@ -22,17 +23,15 @@
 
   <div v-else>
     <div v-for="article in Articles" :key="article.id" class="container border border-dark text-center mb-5 w-25">
+      <router-link :to="`/article/${article.id}`">
         <p>{{ article.id }}</p>
         <p class="font-weight-bold">{{ article.Article_title }}</p>
         <p>{{ article.Article_summary }}</p>
         <p>{{ article.Article_category }}</p>
-        <p class="font-italic">{{ article.Article_date }}</p>  
+        <p class="font-italic">{{ article.Article_date }}</p>
+      </router-link>
     </div>
-
   </div>
- 
-
-
    
 </template>
 
@@ -51,7 +50,7 @@ export default defineComponent({
   },
   data(){
     return{
-    filter: null
+    filter: null,
   }},
   
 
