@@ -22,8 +22,10 @@ ul {
   color: black !important;
 }
 
-.maroon:hover {
-  opacity: 0.9;
+.maroon:hover,
+.light-red:hover,
+.grey:hover {
+  opacity: 0.85;
 }
 
 .comment {
@@ -36,4 +38,8 @@ ul {
 textarea:focus,
 input:focus {
   outline: none;
+}
+
+.short {
+  height: 3rem;
 }

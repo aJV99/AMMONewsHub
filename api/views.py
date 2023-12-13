@@ -140,6 +140,20 @@ def get_article(request, article_id):
     return JsonResponse(model_to_dict(get_object_or_404(Article, pk=article_id)))
 
 
+def comment_response(comment: Comment):
+    return {
+        "id": comment.id,
+        "article_id": comment.article.id,
+        "user_id": comment.user.id,
+        "parent_comment_id": comment.parent_comment.id
+        if comment.parent_comment
+        else None,
+        "text": comment.text,
+        "created": comment.created,
+        "updated": comment.updated,
+    }
+
+
 @csrf_exempt
 def handle_comments(request: HttpRequest, article_id: int):
     """handles the GET all article comments and POST new top level comment"""
@@ -157,7 +171,7 @@ def handle_comments(request: HttpRequest, article_id: int):
     elif request.method == "POST":
         data = json.loads(request.body)
         comment = Comment.objects.create(**data | {"user": user, "article": article})
-        return JsonResponse(model_to_dict(comment))
+        return JsonResponse(comment_response(comment))
 
     return HttpResponseNotAllowed(["GET", "POST"])
 
@@ -173,12 +187,11 @@ def handle_comment(request: HttpRequest, article_id: int, comment_id: int):
     comment = get_object_or_404(Comment, pk=comment_id)
 
     if request.method == "POST":
-        print("POST!!")
         data = json.loads(request.body)
         new_comment = Comment.objects.create(
             **data | {"user": user, "article": article, "parent_comment": comment}
         )
-        return JsonResponse(model_to_dict(new_comment))
+        return JsonResponse(comment_response(new_comment))
 
     if request.method == "DELETE":
         response = model_to_dict(comment)
@@ -192,7 +205,8 @@ def handle_comment(request: HttpRequest, article_id: int, comment_id: int):
                 comment.__setattr__(field, data[field])
         comment.save()
     # GET
-    return JsonResponse(model_to_dict(comment))
+    return JsonResponse(comment_response(comment))
+    # return JsonResponse(model_to_dict(comment))
 
 
 # PROFILES VIEW
