@@ -2,33 +2,14 @@
   <div class="h1">
     {{ title }}
   </div>
-  <select class="form-select" v-model="filter">
-    <option :value="null">Choose Category</option>
-    <option v-for="article in Articles" :value="article.Article_category">{{ article.Article_category }} </option>
+  <p>{{article?.Article_title}}</p>
+  <p>{{article?.Article_summary}}</p>
+  <!-- <div v-if="article?.Comments !== null"></div> -->
+    <div v-for="comment in comments" class="container border border-dark text-center mb-5 w-25">
+        <!-- <p>{{comment}}</p> -->
+        <Comment :node="comment" />
 
-  </select>
-  <p>{{ console.log(filter) }}</p>
-  <div v-if="filter !== null">
-    <div v-for="article in Articles" :key="article.id" class="container text-center  w-25">
-      
-        <div v-if="filter == article.Article_category" class="mb-5 border border-dark">
-          <p>{{ article.id }}</p>
-          <p class="font-weight-bold">{{ article.Article_title }}</p>
-          <p>{{ article.Article_summary }}</p>
-          <p>{{ article.Article_category }}</p>
-          <p class="font-italic">{{ article.Article_date }}</p>  
-        </div>
-      </div>
-  </div>
 
-  <div v-else>
-    <div v-for="article in Articles" :key="article.id" class="container border border-dark text-center mb-5 w-25">
-        <p>{{ article.id }}</p>
-        <p class="font-weight-bold">{{ article.Article_title }}</p>
-        <p>{{ article.Article_summary }}</p>
-        <p>{{ article.Article_category }}</p>
-        <p class="font-italic">{{ article.Article_date }}</p>
-        
     </div>
     <p> <button
             type="button"
@@ -38,8 +19,6 @@
           >
             Add Comment
     </button></p>  
-
-  </div>
 
   <!-- Modal For Adding Comment -->
   <div
@@ -66,14 +45,14 @@
               <div class="pb-3">
   
                 <div class="py-2">
-                  <h6>Animal Date of Birth:</h6>
+                  <h6>Add Comment:</h6>
                   <input
-                    id="dob"
+                    id="comment_content"
                     v-model="comment_content"
                     class="border-0 outline-0 bg-light rounded-5 px-4 py-2 w-100"
-                    placeholder="Date"
+                    placeholder="Text"
                     required
-                    type="date"
+                    type="text"
                   />
                 </div>
               </div>
@@ -106,26 +85,61 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { useArticleStore } from '../stores/articleStore';
+import { mapActions } from 'pinia';
+import { defineComponent, ref , unref} from 'vue';
+// import { useArticleStore } from '../stores/articleStore';
+import { useRoute } from 'vue-router';
+import Comment from "./Comment.vue"
+
+
 
 export default defineComponent({
   setup() {
-    const articleStore = useArticleStore();
+    // const articleStore = useArticleStore();
+    const route = useRoute();
+    // const articleId = computed(() => {
+    //   const id = route.params.id;
+    //   return Array.isArray(id) ? parseInt(id[0]) : parseInt(id);
+    // });
 
-    return {
-      Articles: articleStore.Articles,
-      title: "Article Page",
-    };
+    const article = ref({})
+    const comments = ref({})
+
+    fetch(`http://127.0.0.1:8000/articles/${route.params.id}`)
+      .then(response => response.json())
+      .then(data => article.value = data);
+
+    fetch(`http://127.0.0.1:8000/articles/${route.params.id}/comments`)
+      .then(response => response.json())
+      .then(data => {
+        const nodes = new Map();
+        data.forEach((comment: any) => {
+          if (nodes.has(comment.parent_comment_id)) {
+            nodes.get(comment.parent_comment_id).push(comment)
+          } else {
+            nodes.set(comment.parent_comment_id, [comment])
+          }
+        });
+        data.forEach((comment: any ) => {
+          if (nodes.has(comment.id)) {
+            comment.children = nodes.get(comment.id)
+          }
+        })
+        console.log(data)
+        comments.value = nodes.get(null)
+      });
+ 
+
+    return { article:article, title: "Article Page", comments:comments};
   },
   data(){
     return{
     filter: null,
     comment_content: null,
   }},
-  
-
-
+  components: {
+    Comment,
+  },
 });
 </script>
 

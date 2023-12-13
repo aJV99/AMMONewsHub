@@ -25,7 +25,9 @@ class Profile(models.Model):
 
     full_name = models.CharField(max_length=300)
     bio = models.CharField(max_length=300)
-    image = models.ImageField(default="profiles/defaultprofile.jpeg", upload_to="profiles/")
+    image = models.ImageField(
+        default="profiles/defaultprofile.jpeg", upload_to="profiles/"
+    )
 
     def __str__(self):
         return self.full_name
@@ -61,7 +63,9 @@ post_save.connect(save_user_profile, sender=User)
 class Comment(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    parent_comment = models.ForeignKey("self", blank=True, null=True, on_delete=models.CASCADE)
+    parent_comment = models.ForeignKey(
+        "self", blank=True, null=True, on_delete=models.CASCADE
+    )
     text = models.CharField(max_length=200)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

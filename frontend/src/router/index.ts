@@ -27,33 +27,17 @@ const router = createRouter({
       name: "Main Page",
       component: MainPage,
       beforeEnter: async (_to, _from, next) => {
-        console.log("mian before enter");
+        console.log("main before enter");
         const articleStore = useArticleStore();
         if (!articleStore.Articles) {
           await articleStore.fetchArticles();
         }
-        next();
-      },
-    },
-
-    {
-      path: "/blogs/",
-      name: "Blogs",
-      component: ArticlePage,
-      beforeEnter: async (_to, _from, next) => {
-        const articleStore = useArticleStore();
-        if (!articleStore.Articles) {
-          await articleStore.fetchArticles();
-        }
-        const commentsStore = useCommentsStore();
-        const queryParam = _to.query.myQueryParam;
-        console.log(queryParam);
-        await commentsStore.fetchComments(1);
         next();
       },
     },
     { path: "/other/", name: "Other Page", component: OtherPage },
     { path: "/profile", name: "Profile Page", component: ProfilePage },
+    { path: "/article/:id", name: "Article Page", component: ArticlePage },
   ],
 });
 

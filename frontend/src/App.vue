@@ -16,9 +16,6 @@
             <li class="nav-item">
               <router-link class="nav-link text-white font-weight-bold" :to="{name: 'Profile Page'}">Profile</router-link>
             </li>
-            <li class="nav-item">
-              <router-link class="nav-link text-white font-weight-bold" :to="{name: 'Blogs'}">Blogs</router-link>
-            </li>
           </ul>
           <ul class="navbar-nav ml-auto">
             <li class="nav-item">

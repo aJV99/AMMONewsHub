@@ -1,6 +1,6 @@
 // stores/userProfile.ts
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref, unref } from "vue";
 import { Article } from "../interfaces/Articles";
 
 export const useArticleStore = defineStore("articles", () => {
@@ -26,5 +26,10 @@ export const useArticleStore = defineStore("articles", () => {
     }
   }
 
-  return { Articles, fetchArticles };
+  function getArticleById(article_id: number) {
+    console.log("****" + Articles.value);
+    return Articles.value?.find((article) => article_id === article.id);
+  }
+
+  return { Articles, fetchArticles, getArticleById };
 });
