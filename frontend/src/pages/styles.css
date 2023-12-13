@@ -1,0 +1,39 @@
+ul {
+  list-style-type: none;
+}
+
+.bottom-comment {
+  margin-bottom: -0.5rem;
+}
+
+.light-red {
+  background-color: rgb(139, 0, 0, 0.2) !important;
+  color: black !important;
+  height: 2.5rem !important;
+}
+
+.maroon {
+  background-color: rgb(139, 0, 0, 0.8) !important;
+  color: white !important;
+}
+
+.grey {
+  background-color: rgb(108, 117, 125, 0.2) !important;
+  color: black !important;
+}
+
+.maroon:hover {
+  opacity: 0.9;
+}
+
+.comment {
+  width: 72rem;
+  height: 5rem;
+  border: solid 1px rgb(139, 0, 0, 0.5);
+  background-color: blue;
+}
+
+textarea:focus,
+input:focus {
+  outline: none;
+}
