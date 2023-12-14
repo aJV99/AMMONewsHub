@@ -1,15 +1,21 @@
 <template>
-    <button type="button" class="btn light-red align-self-center fw-lighter rounded-pill" data-bs-toggle="modal"
-        :data-bs-target="'#replyId-' + node.id">
-        Reply
+    <button type="button" :class="`btn align-self-center fw-lighter rounded-pill ${!isEdit ? 'light-red' : 'grey'}`"
+        data-bs-toggle="modal" :data-bs-target="`#${isEdit ? 'edit' : 'reply'}Id-${node.id}`">
+        <div v-if="isEdit">
+            Edit
+        </div>
+        <div v-else>
+            Reply
+        </div>
     </button>
     <!-- Modal For Adding Comment -->
-    <div class="modal fade" :id="`replyId-${node.id}`" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" :id="`${isEdit ? 'edit' : 'reply'}Id-${node.id}`" tabindex="-1"
+        aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title p-2 fw-light" id="exampleModalLabel">Add Reply</h4>
-                    <div>{{ node.text }}</div>
+                    <h4 class="modal-title p-2 fw-light" id="exampleModalLabel">{{ isEdit ? "Edit Comment" : "Add Reply" }}
+                    </h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body px-5">
@@ -28,9 +34,9 @@
                                 data-bs-dismiss="modal">
                                 Close
                             </button>
-                            <button @click="addComment(node)"
+                            <button @click="addComment(node)" data-bs-dismiss="modal"
                                 class="btn align-self-center fw-lighter mx-1 rounded-pill light-red">
-                                Reply
+                                Post
                             </button>
                         </div>
                     </div>
@@ -50,7 +56,7 @@ export default defineComponent({
     },
     data() {
         return {
-            comment_content: null
+            comment_content: this.isEdit ? this.node.text : null
         }
     },
     methods: {
@@ -63,6 +69,10 @@ export default defineComponent({
         },
         addComment: {
             type: Function,
+            required: true
+        },
+        isEdit: {
+            type: Boolean,
             required: true
         }
     },

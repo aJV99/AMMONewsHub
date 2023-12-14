@@ -12,11 +12,13 @@
         </h6>
       </div>
       <div class="d-flex flex-row">
-        <div type="button" class="btn align-self-center fw-lighter rounded-pill grey">Edit</div>
+        <div class="align-self-center">
+          <Reply :node="node" :addComment="editComment" :isEdit="true" />
+        </div>
         <div type="button" @click="deleteItem(node)" class="mx-1 btn align-self-center fw-lighter  rounded-pill grey">
           Delete</div>
         <div class="align-self-center">
-          <Reply :node="node" :addComment="addComment" />
+          <Reply :node="node" :addComment="addComment" :isEdit="false" />
         </div>
 
       </div>
@@ -24,7 +26,7 @@
     </div>
     <ul v-if="node.children && node.children.length">
       <li v-for="child in node.children" :key="child.id">
-        <CommentPage :node="child" :deleteItem="deleteItem" :addComment="addComment" />
+        <CommentPage :node="child" :deleteItem="deleteItem" :addComment="addComment" :editComment="editComment" />
       </li>
     </ul>
   </div>
@@ -60,6 +62,10 @@ export default defineComponent({
       required: true
     },
     addComment: {
+      type: Function,
+      required: true
+    },
+    editComment: {
       type: Function,
       required: true
     }
