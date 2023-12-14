@@ -12,3 +12,6 @@ app.use(createPinia());
 app.use(router);
 
 app.mount("#app");
+
+// make "http://localhost:8000" for local frontend testing and "" for npm run build
+app.provide("backend_url", "");
