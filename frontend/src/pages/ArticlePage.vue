@@ -44,7 +44,7 @@
   </div>
 
   <div v-for="comment in comments" class=" mx-auto bottom-comment">
-    <CommentPage :node="comment" :deleteItem="deleteItem" :addComment="addComment" />
+    <CommentPage :node="comment" :deleteItem="deleteItem" :addComment="addComment" :editComment="editComment" />
   </div>
   <div class="mb-5"></div>
 </template>
@@ -121,7 +121,14 @@ export default defineComponent({
       comment.children = []
     }
 
-    return { article: article, title: "Article Page", comments: comments, deleteItem, addComment };
+    async function editComment(node: any) {
+      console.log("editComment ", node)
+      // @ts-ignore
+      const comment = await articleStore.editComment(this.comment_content, articleId.value, node?.id)
+
+    }
+
+    return { article: article, title: "Article Page", comments: comments, deleteItem, addComment, editComment };
   },
   data() {
     return {

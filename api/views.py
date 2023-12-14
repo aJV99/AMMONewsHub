@@ -119,24 +119,29 @@ def registerUser(request):
 @login_required
 def get_profile(request: HttpRequest) -> JsonResponse:
     user = request.user
+    # user = get_object_or_404(User, pk=2)
     try:
         profile = Profile.objects.get(user=user)
         favorite_categories = json.loads(profile.favorite_categories)
 
         profile_data = {
+            "user_id": user.id,
             "username": user.username,
             "email": user.email,
             "full_name": profile.full_name,
             "bio": profile.bio,
-            "date_of_birth": profile.date_of_birth.strftime("%Y-%m-%d") if profile.date_of_birth else None,
+            "date_of_birth": profile.date_of_birth.strftime("%Y-%m-%d")
+            if profile.date_of_birth
+            else None,
             "image": profile.image.url if profile.image else None,
-            "favorite_categories": favorite_categories
+            "favorite_categories": favorite_categories,
         }
 
         return JsonResponse(profile_data)
     except Profile.DoesNotExist:
         return JsonResponse({"error": "Profile not found"}, status=404)
-    
+
+
 @csrf_exempt
 @login_required
 @require_http_methods(["PUT"])
@@ -146,46 +151,56 @@ def update_profile(request):
     data = json.loads(request.body)
 
     # Update user and profile fields
-    user.email = data.get('email', user.email)
-    profile.full_name = data.get('full_name', profile.full_name)
-    profile.bio = data.get('bio', profile.bio)
-    profile.date_of_birth = data.get('date_of_birth', profile.date_of_birth)
-    
+    user.email = data.get("email", user.email)
+    profile.full_name = data.get("full_name", profile.full_name)
+    profile.bio = data.get("bio", profile.bio)
+    profile.date_of_birth = data.get("date_of_birth", profile.date_of_birth)
+
     # Update favorite categories
-    favorite_categories = data.get('favorite_categories', [])
+    favorite_categories = data.get("favorite_categories", [])
     profile.favorite_categories = json.dumps(favorite_categories)
 
     user.save()
     profile.save()
-    return JsonResponse({"status": "success", "message": "Profile updated successfully"})
+    return JsonResponse(
+        {"status": "success", "message": "Profile updated successfully"}
+    )
+
 
 @csrf_exempt
 @login_required
 def upload_profile_image(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         user = request.user
         profile = user.profile
 
         # Handle the uploaded file
-        if 'image' in request.FILES:
-            image = request.FILES['image']
+        if "image" in request.FILES:
+            image = request.FILES["image"]
             file_extension = os.path.splitext(image.name)[1]
             file_name = f"profiles/{user.username}{file_extension}"
-            saved_file_path = default_storage.save(f"images/{file_name}", ContentFile(image.read()))
+            saved_file_path = default_storage.save(
+                f"images/{file_name}", ContentFile(image.read())
+            )
 
             # Update the profile image path
             profile.image = f"images/{file_name}"
             profile.save()
 
-            return JsonResponse({"status": "success", "image_url": default_storage.url(saved_file_path)})
+            return JsonResponse(
+                {"status": "success", "image_url": default_storage.url(saved_file_path)}
+            )
 
-        return JsonResponse({"status": "error", "message": "No image file provided"}, status=400)
+        return JsonResponse(
+            {"status": "error", "message": "No image file provided"}, status=400
+        )
 
-    return HttpResponseNotAllowed(['POST'])
+    return HttpResponseNotAllowed(["POST"])
+
 
 @login_required
 def reset_profile_image_to_default(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         user = request.user
         profile = user.profile
 
@@ -195,7 +210,7 @@ def reset_profile_image_to_default(request):
 
         return JsonResponse({"status": "success", "image_url": profile.image.url})
 
-    return HttpResponseNotAllowed(['POST'])
+    return HttpResponseNotAllowed(["POST"])
 
 
 def get_articles(request):
@@ -212,11 +227,12 @@ def get_article(request, article_id):
     return JsonResponse(model_to_dict(get_object_or_404(Article, pk=article_id)))
 
 
-def comment_response(comment: Comment):
+def comment_to_dict(comment: Comment):
     return {
         "id": comment.id,
         "article_id": comment.article.id,
         "user_id": comment.user.id,
+        "user_name": comment.user.username,
         "parent_comment_id": comment.parent_comment.id
         if comment.parent_comment
         else None,
@@ -226,35 +242,33 @@ def comment_response(comment: Comment):
     }
 
 
+@login_required
 @csrf_exempt
 def handle_comments(request: HttpRequest, article_id: int):
     """handles the GET all article comments and POST new top level comment"""
-    # if not request.user.is_authenticated:
-    #     return HttpResponse("Unauthorized", status=401)
-    # user = request.user
-    user = get_object_or_404(User, pk=1)
+    user = request.user
+    # user = get_object_or_404(User, pk=2)
     article = get_object_or_404(Article, pk=article_id)
 
     if request.method == "GET":
         comments = list(
-            Comment.objects.filter(article=article).values()
+            comment_to_dict(i) for i in Comment.objects.filter(article=article)
         )  # return all levels in flat list
         return JsonResponse(comments, safe=False)
     elif request.method == "POST":
         data = json.loads(request.body)
         comment = Comment.objects.create(**data | {"user": user, "article": article})
-        return JsonResponse(comment_response(comment))
+        return JsonResponse(comment_to_dict(comment))
 
     return HttpResponseNotAllowed(["GET", "POST"])
 
 
+@login_required
 @csrf_exempt
 def handle_comment(request: HttpRequest, article_id: int, comment_id: int):
     """handles GET one comment PUT,PATCH and DELETE"""
-    # if not request.user.is_authenticated:
-    #     return HttpResponse("Unauthorized", status=401)
-    # user = request.user
-    user = get_object_or_404(User, pk=1)
+    user = request.user
+    # user = get_object_or_404(User, pk=2)
     article = get_object_or_404(Article, pk=article_id)
     comment = get_object_or_404(Comment, pk=comment_id)
 
@@ -263,7 +277,7 @@ def handle_comment(request: HttpRequest, article_id: int, comment_id: int):
         new_comment = Comment.objects.create(
             **data | {"user": user, "article": article, "parent_comment": comment}
         )
-        return JsonResponse(comment_response(new_comment))
+        return JsonResponse(comment_to_dict(new_comment))
 
     if request.method == "DELETE":
         response = model_to_dict(comment)
@@ -277,7 +291,7 @@ def handle_comment(request: HttpRequest, article_id: int, comment_id: int):
                 comment.__setattr__(field, data[field])
         comment.save()
     # GET
-    return JsonResponse(comment_response(comment))
+    return JsonResponse(comment_to_dict(comment))
     # return JsonResponse(model_to_dict(comment))
 
 

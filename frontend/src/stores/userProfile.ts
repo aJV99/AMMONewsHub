@@ -2,15 +2,18 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { Profile } from "../interfaces/Profile";
+import { inject } from "vue";
 
 function getCsrfToken() {
   let cookieValue = null;
-  if (document.cookie && document.cookie !== '') {
-    const cookies = document.cookie.split(';');
+  if (document.cookie && document.cookie !== "") {
+    const cookies = document.cookie.split(";");
     for (let i = 0; i < cookies.length; i++) {
       const cookie = cookies[i].trim();
-      if (cookie.substring(0, "csrftoken".length + 1) === ("csrftoken" + '=')) {
-        cookieValue = decodeURIComponent(cookie.substring("csrftoken".length + 1));
+      if (cookie.substring(0, "csrftoken".length + 1) === "csrftoken" + "=") {
+        cookieValue = decodeURIComponent(
+          cookie.substring("csrftoken".length + 1)
+        );
         break;
       }
     }
@@ -20,10 +23,11 @@ function getCsrfToken() {
 
 export const useUserProfileStore = defineStore("userProfile", () => {
   const profile = ref<Profile | null>(null);
+  const backedUrl = inject("backend_url");
 
   async function fetchUserProfile() {
     try {
-      const response = await fetch("/profile/");
+      const response = await fetch(`${backedUrl}/profile/`);
       if (response.ok) {
         const data: Profile = await response.json();
         profile.value = data;
@@ -36,51 +40,51 @@ export const useUserProfileStore = defineStore("userProfile", () => {
   }
 
   async function updateProfile(updatedProfile: Profile) {
-    const csrfToken = getCsrfToken(); 
+    const csrfToken = getCsrfToken();
     if (!csrfToken) {
-      console.error('CSRF token not found');
+      console.error("CSRF token not found");
       return;
     }
     try {
-        const response = await fetch(`/profile/update/`, {
-          method: 'PUT',
-          headers: {
-              'Content-Type': 'application/json',
-              'X-CSRFToken': csrfToken // Include the CSRF token in the request headers
-          },
-          body: JSON.stringify(updatedProfile),
-          credentials: 'include'
-        });
-        if (response.ok) {
-          profile.value = { ...profile.value, ...updatedProfile };
-        }
+      const response = await fetch(`${backedUrl}/profile/update/`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": csrfToken, // Include the CSRF token in the request headers
+        },
+        body: JSON.stringify(updatedProfile),
+        credentials: "include",
+      });
+      if (response.ok) {
+        profile.value = { ...profile.value, ...updatedProfile };
+      }
     } catch (error) {
-        // Handle errors
+      // Handle errors
     }
   }
 
   async function uploadProfileImage(file: File) {
     if (!file) {
-      console.error('No file provided');
+      console.error("No file provided");
       return;
     }
 
     const formData = new FormData();
-    formData.append('image', file);
+    formData.append("image", file);
 
-    const csrfToken = getCsrfToken(); 
+    const csrfToken = getCsrfToken();
     if (!csrfToken) {
-      console.error('CSRF token not found');
+      console.error("CSRF token not found");
       return;
     }
     try {
-      const response = await fetch('/profile/upload-image/', {
-        method: 'POST',
+      const response = await fetch(`${backedUrl}/profile/upload-image/`, {
+        method: "POST",
         body: formData,
         headers: {
-          'X-CSRFToken': csrfToken
+          "X-CSRFToken": csrfToken,
         },
-        credentials: 'include'
+        credentials: "include",
       });
       if (response.ok) {
         const data = await response.json();
@@ -89,23 +93,23 @@ export const useUserProfileStore = defineStore("userProfile", () => {
         }
       }
     } catch (error) {
-      console.error('Error uploading image:', error);
+      console.error("Error uploading image:", error);
     }
   }
 
   async function resetProfileImageToDefault() {
-    const csrfToken = getCsrfToken(); 
+    const csrfToken = getCsrfToken();
     if (!csrfToken) {
-      console.error('CSRF token not found');
+      console.error("CSRF token not found");
       return;
     }
     try {
-      const response = await fetch('/profile/reset-image/', {
-        method: 'POST',
+      const response = await fetch(`${backedUrl}/profile/reset-image/`, {
+        method: "POST",
         headers: {
-          'X-CSRFToken': csrfToken
+          "X-CSRFToken": csrfToken,
         },
-        credentials: 'include'
+        credentials: "include",
       });
       if (response.ok) {
         const data = await response.json();
@@ -114,9 +118,15 @@ export const useUserProfileStore = defineStore("userProfile", () => {
         }
       }
     } catch (error) {
-      console.error('Error resetting image:', error);
+      console.error("Error resetting image:", error);
     }
   }
-  
-  return { profile, fetchUserProfile, updateProfile, uploadProfileImage, resetProfileImageToDefault };
+
+  return {
+    profile,
+    fetchUserProfile,
+    updateProfile,
+    uploadProfileImage,
+    resetProfileImageToDefault,
+  };
 });
