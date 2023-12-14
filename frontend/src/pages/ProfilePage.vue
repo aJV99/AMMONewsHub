@@ -16,9 +16,8 @@
       </div>
       <div class="form-group pb-4">
         <label for="profileImage">Profile Image:</label>
-        <input type="file" id="profileImage" @change="uploadImage" class="form-control" />
-        <img :src="profile.image" alt="Profile Image" v-if="profile.image" class="profile-image" />
-        <br>
+        <input type="file" id="profileImage" @change="uploadImage" class="form-control" /><br>
+        <img :src="profile.image" alt="Profile Image" v-if="profile.image" class="profile-image" /><br>
         <button @click.prevent="resetImage" class="btn btn-secondary mt-2">Reset to Default</button>
       </div>
       <div class="form-group pb-4">
