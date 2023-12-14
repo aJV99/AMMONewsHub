@@ -1,60 +1,65 @@
-# Interactive Newspaper App
-## Template for ECS639U Group Coursework
+# **AMMO News Hub**
 
-This template should be used as the starting point for your group coursework in the module ECS639U Web Programming (at Queen Mary University of London). Use Git (github.qmul.ac.uk) to collaborate on the coursework with your group members. Module leader: Paulo Oliva <[p.oliva@qmul.ac.uk](mailto:p.oliva@qmul.ac.uk)>
+## **Project Overview**
 
-## Local development
+AMMO News Hub is a Single Page Application (SPA) developed using Django for the model-based web API and Vue/Vite for the reactive frontend. The application allows users to browse news articles, comment on articles, and manage their profiles, including selecting favorite news categories.
 
-To run this project in your development machine, follow these steps:
+### **Key Features**
 
-1. Create and activate a conda environment
+- User account creation, login, and logout using Django's authentication framework.
+- Custom User model including fields for profile image, email, and date of birth.
+- Profile page where users can edit their details and profile pictures via Ajax.
+- News articles categorized into sections like Sports, World News, Finance, etc.
+- Users can select their favorite news categories in their profile, filtering the articles shown to them.
+- Commenting system on news articles, with options to reply, edit, and delete comments.
+- Both frontend and backend support static type checking with TypeScript and Python type annotations, respectively.
 
-2. Download this repo as a zip and add the files to your own private repo.
+### **Technologies Used**
 
-3. Install Pyhton dependencies (main folder):
+- **Backend**: Django 4.2, Python 3.10
+- **Frontend**: Vue 3, Vite, Pinia, TypeScript
+- **Database**: SQLite (development), PostgreSQL (production)
+- **Other Tools**: Git, npm, Conda
 
-    ```console
-    $ pip install -r requirements.txt
-    ```
+---
 
-4. Create a development database:
+## **Deployment**
 
-    ```console
-    $ python manage.py migrate
-    ```
+The application has been deployed to EECS's OpenShift platform. You can access it at the following URL:
 
-5. Install JavaScript dependencies (from 'frontend' folder):
+[AMMO News Hub](http://ammo-newshub.openshift.eecs.qmul.ac.uk/)
 
-    ```console
-    $ npm install
-    ```
+### **Admin Access**
 
-6. If everything is alright, you should be able to start the Django development server from the main folder:
+- **Username**: admin
+- **Password**: [admin]
 
-    ```console
-    $ python manage.py runserver
-    ```
+### **Test Users**
 
-7. and the Vue server from the 'frontend' sub-folder:
+1. **Username**: testuser1 | **Password**: [TestUser1Password]
+2. **Username**: testuser2 | **Password**: [TestUser2Password]
+3. **Username**: testuser3 | **Password**: [TestUser3Password]
+4. **Username**: testuser4 | **Password**: [TestUser4Password]
+5. **Username**: testuser5 | **Password**: [TestUser5Password]
 
-    ```console
-    $ npm run dev
-    ```
+---
 
-8. Open your browser and go to http://localhost:5173, you will be greeted with a template page.
+## **Local Development**
 
-## OpenShift deployment
+Follow these steps to run the project on your local machine:
 
-Once your project is ready to be deployed you will need to 'build' the Vue app and place it in Django's static folder.
+1. **Set Up the Conda Environment**: **`conda create --name ammoenv python=3.10`**
+2. **Activate the Environment**: **`conda activate ammoenv`**
+3. **Install Python Dependencies**: **`pip install -r requirements.txt`**
+4. **Create and Migrate Database**: **`python manage.py migrate`**
+5. **Install JavaScript Dependencies**: Navigate to 'frontend' folder and run **`npm install`**
+6. **Run the Vue Server**: In a separate terminal, navigate to 'frontend' and run **`npm run dev`**
+7. **Run the Django Server**: **`python manage.py runserver`**
+8. **Access the Application**: Open a browser and navigate to **`http://localhost:8000`**
 
-1. The build command in package.json and the vite.config.ts files have already been modified so that when running 'npm run build' the generated JavaScript and CSS files will be placed in the mainapp static folder, and the index.html file will be placed in the templates folder:
+## **Contributors**
 
-    ```console
-    $ npm run build
-    ```
-
-2. You should then follow the instruction on QM+ on how to deploy your app on EECS's OpenShift live server.
-
-## License
-
-This code is dedicated to the public domain to the maximum extent permitted by applicable law, pursuant to [CC0](http://creativecommons.org/publicdomain/zero/1.0/).
+- [Abbas Alibhai](https://github.com/aJV99)
+- [Marco Giovanni Solari](https://github.com/Ms2302)
+- [Milena Serych](https://github.com/milenaserych)
+- [Oryna Goichuk](https://github.com/orynamg)

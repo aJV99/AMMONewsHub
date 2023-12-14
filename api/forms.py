@@ -5,12 +5,17 @@ from django.contrib.auth.forms import AuthenticationForm #Login
 
 from django.contrib.auth import authenticate
 
-from .models import User
+from .models import Profile, User
 
 class CustomUserCreationForm(UserCreationForm):
     '''
     Register form using 'UserCreationForm' provided by Django
     '''
+    full_name = forms.CharField(required=True)
+    date_of_birth = forms.DateField(
+        required=True,
+        widget=forms.DateInput(attrs={'type': 'date'})
+    )
     class Meta:
         '''
         Using Meta class provide additional information like
@@ -18,7 +23,18 @@ class CustomUserCreationForm(UserCreationForm):
         specifying the fields that should be in the form
         '''
         model = User
-        fields = ['first_name', 'email', 'username', 'password1', 'password2']
+        fields = ['full_name', 'date_of_birth', 'email', 'username', 'password1', 'password2']
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        if commit:
+            user.save()
+            profile = Profile.objects.create(
+                user=user, 
+                full_name=self.cleaned_data['full_name'], 
+                date_of_birth=self.cleaned_data['date_of_birth']
+            )
+        return user
 
 
 

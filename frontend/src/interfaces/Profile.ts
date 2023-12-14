@@ -1,8 +1,12 @@
+import { Category } from "./Category";
+
 // interfaces/Profile.ts
 export interface Profile {
+    full_name: string;
     username: string;
     email: string;
-    full_name: string;
+    date_of_birth: Date;
     bio: string;
-    image?: string;
+    image: string;
+    favorite_categories: Category[];
 }
