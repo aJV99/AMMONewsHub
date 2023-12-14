@@ -51,37 +51,31 @@
 
 <script lang="ts">
 // import { mapActions } from 'pinia';
-import { defineComponent, ref } from 'vue';
-// import { useArticleStore } from '../stores/articleStore';
+import { defineComponent, ref, computed } from 'vue';
+import { useArticleStore } from '../stores/articleStore';
 import { useRoute } from 'vue-router';
 import Comment from "./Comment.vue"
 
 export default defineComponent({
   setup() {
-    // const articleStore = useArticleStore();
+    const articleStore = useArticleStore();
     const route = useRoute();
-    const articleId = ref(route.params.id)
-    // const articleId = computed(() => {
-    //   const id = route.params.id;
-    //   return Array.isArray(id) ? parseInt(id[0]) : parseInt(id);
-    // });
+    // const articleId = ref(route.params.id)
+    const articleId = computed(() => {
+      const id = route.params.id;
+      return Array.isArray(id) ? parseInt(id[0]) : parseInt(id);
+    });
 
-    const article = ref({})
+    const article = ref(articleStore.getArticleById(articleId.value))
     const comments = ref([])
     const allComments = ref(new Map())
 
 
-
-    fetch(`http://127.0.0.1:8000/articles/${route.params.id}`)
-      .then(response => response.json())
-      .then(data => article.value = data);
-
-
-    fetch(`http://127.0.0.1:8000/articles/${route.params.id}/comments`)
-      .then(response => response.json())
-      .then(data => {
+    articleStore.fetchArticleComments(articleId.value)
+      .then(() => {
+        const data = articleStore.Comments.get(articleId.value)
         const nodes = new Map();
-        data.forEach((comment: any) => {
+        data?.forEach((comment: any) => {
           if (nodes.has(comment.parent_comment_id)) {
             nodes.get(comment.parent_comment_id).push(comment)
           } else {
@@ -89,69 +83,43 @@ export default defineComponent({
           }
           allComments.value.set(comment.id, comment)
         });
-        data.forEach((comment: any) => {
+        data?.forEach((comment: any) => {
           if (nodes.has(comment.id)) {
             comment.children = nodes.get(comment.id)
           } else {
             comment.children = []
           }
         })
-        console.log(data)
         comments.value = nodes.get(null)
-
       });
 
     async function deleteItem(node: any) {
       console.log("deleteItem() " + JSON.stringify(node))
-      const url = `http://127.0.0.1:8000/articles/${articleId.value}/comments/${node.id}`
-      const response = await fetch(url, {
-        method: "DELETE",
-      })
-      if (response.ok) {
-        if (node.parent_comment_id != null) {
-          const parentComment = allComments.value.get(node.parent_comment_id)
-          parentComment.children = parentComment.children.filter((comment: any) => comment.id != node.id)
-        } else {
-          comments.value = comments.value.filter((comment: any) => comment.id != node.id);
-        }
-        allComments.value.delete(node.id)
+      await articleStore.deleteComment(node)
+      if (node.parent_comment_id != null) {
+        const parentComment = allComments.value.get(node.parent_comment_id)
+        parentComment.children = parentComment.children.filter((comment: any) => comment.id != node.id)
+      } else {
+        comments.value = comments.value.filter((comment: any) => comment.id != node.id);
       }
+      allComments.value.delete(node.id)
     }
 
     async function addComment(node: any) {
-      let data = {
-        text: this.comment_content
-      }
-      let response_url = `http://127.0.0.1:8000/articles/${articleId.value}/comments`
-      if (node != null) {
-        response_url += `/${node.id}`
-      }
-      try {
-        const response = await fetch(response_url, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        });
-        const comment = await response.json()
-        console.log(comment)
-        console.log(JSON.stringify(comment))
-        if (comment.parent_comment_id != null) {
-          console.log("great")
-          const parentComment = allComments.value.get(comment.parent_comment_id)
-          parentComment.children.push(comment)
-        } else {
-          comments.value.push(comment)
-        }
-        allComments.value.set(comment.id, comment)
-        comment.children = []
-      } catch (error) {
-        console.log('There was an error', error);
-      }
+      const comment = await articleStore.addComment(this.comment_content, articleId.value, node?.id)
 
+      console.log(comment)
+      console.log(JSON.stringify(comment))
+      if (comment.parent_comment_id != null) {
+        console.log("great")
+        const parentComment = allComments.value.get(comment.parent_comment_id)
+        parentComment.children.push(comment)
+      } else {
+        comments.value.push(comment)
+      }
+      allComments.value.set(comment.id, comment)
+      comment.children = []
     }
-
 
     return { article: article, title: "Article Page", comments: comments, deleteItem, addComment };
   },
