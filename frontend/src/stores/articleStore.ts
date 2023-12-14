@@ -8,7 +8,7 @@ export const useArticleStore = defineStore("articles", () => {
   const Articles = ref<Article[] | null>(null);
   const Comments = ref<Map<number, Comment[]>>(new Map());
   // make backendUrl="http://localhost:8000" for local frontend testing
-  const backedUrl = "";
+  const backedUrl = "http://localhost:8000";
 
   async function fetchArticles() {
     try {
