@@ -10,7 +10,7 @@ export const useArticleStore = defineStore("articles", () => {
 
   async function fetchArticles() {
     try {
-      const response = await fetch(`http://localhost:8000/articles/`, {
+      const response = await fetch(`/articles/`, {
         credentials: "include",
       });
       if (response.ok) {
@@ -31,7 +31,7 @@ export const useArticleStore = defineStore("articles", () => {
   async function fetchArticleComments(article_id: number) {
     try {
       const response = await fetch(
-        `http://localhost:8000/articles/${article_id}/comments`,
+        `/articles/${article_id}/comments`,
         {
           credentials: "include",
         }
@@ -57,7 +57,7 @@ export const useArticleStore = defineStore("articles", () => {
 
   async function deleteComment(comment: Comment) {
     console.log("deleteComment() " + JSON.stringify(comment));
-    const url = `http://127.0.0.1:8000/articles/${comment.article_id}/comments/${comment.id}`;
+    const url = `/articles/${comment.article_id}/comments/${comment.id}`;
     await fetch(url, {
       method: "DELETE",
     });
@@ -77,7 +77,7 @@ export const useArticleStore = defineStore("articles", () => {
     let data = {
       text: text,
     };
-    let response_url = `http://127.0.0.1:8000/articles/${article_id}/comments`;
+    let response_url = `/articles/${article_id}/comments`;
     if (parent_id != null) {
       response_url += `/${parent_id}`;
     }

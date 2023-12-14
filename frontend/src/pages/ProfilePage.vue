@@ -42,6 +42,7 @@
       </div>
       <div class="form-group pb-4">
         <button type="submit" class="btn btn-primary">Save Changes</button>
+        <span v-if="saveMessage" class="save-message">{{ saveMessage }}</span>
       </div>
     </form>
   </div>
@@ -69,11 +70,14 @@
               profile.value = newProfile;
           });
   
+          const saveMessage = ref('');
+
           const updateProfile = async () => {
-              console.log(profile.value);
-              if (profile.value) {
-                  await userProfileStore.updateProfile(profile.value);
-              }
+            if (profile.value) {
+              await userProfileStore.updateProfile(profile.value);
+              saveMessage.value = 'Changes saved successfully!';
+              setTimeout(() => { saveMessage.value = ''; }, 3000); // Clear message after 3 seconds
+            }
           };
 
           const uploadImage = async (event: Event) => {
@@ -93,7 +97,8 @@
             profile,
             updateProfile,
             uploadImage,
-            resetImage
+            resetImage,
+            saveMessage,
         };
       },
       data() {
@@ -116,5 +121,10 @@
     width: 200px;
     height: 200px;
     object-fit: cover;
+}
+
+.save-message {
+  margin-left: 10px;
+  color: green;
 }
 </style>
