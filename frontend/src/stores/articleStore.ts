@@ -1,6 +1,6 @@
 // stores/userProfile.ts
 import { defineStore } from "pinia";
-import { ref, unref } from "vue";
+import { ref } from "vue";
 import { Article } from "../interfaces/Articles";
 import { Comment } from "../interfaces/Comments";
 
@@ -10,7 +10,7 @@ export const useArticleStore = defineStore("articles", () => {
 
   async function fetchArticles() {
     try {
-      const response = await fetch("http://localhost:8000/articles/", {
+      const response = await fetch(`http://localhost:8000/articles/`, {
         credentials: "include",
       });
       if (response.ok) {

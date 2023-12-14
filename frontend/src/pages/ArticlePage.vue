@@ -44,7 +44,7 @@
   </div>
 
   <div v-for="comment in comments" class=" mx-auto bottom-comment">
-    <Comment :node="comment" :deleteItem="deleteItem" :addComment="addComment" />
+    <CommentPage :node="comment" :deleteItem="deleteItem" :addComment="addComment" />
   </div>
   <div class="mb-5"></div>
 </template>
@@ -54,22 +54,21 @@
 import { defineComponent, ref, computed } from 'vue';
 import { useArticleStore } from '../stores/articleStore';
 import { useRoute } from 'vue-router';
-import Comment from "./Comment.vue"
+import CommentPage from "./CommentPage.vue"
+import { Comment } from "../interfaces/Comments"
 
 export default defineComponent({
   setup() {
     const articleStore = useArticleStore();
     const route = useRoute();
-    // const articleId = ref(route.params.id)
     const articleId = computed(() => {
       const id = route.params.id;
       return Array.isArray(id) ? parseInt(id[0]) : parseInt(id);
     });
 
     const article = ref(articleStore.getArticleById(articleId.value))
-    const comments = ref([])
+    const comments = ref<Comment[]>([])
     const allComments = ref(new Map())
-
 
     articleStore.fetchArticleComments(articleId.value)
       .then(() => {
@@ -106,6 +105,7 @@ export default defineComponent({
     }
 
     async function addComment(node: any) {
+      // @ts-ignore
       const comment = await articleStore.addComment(this.comment_content, articleId.value, node?.id)
 
       console.log(comment)
@@ -129,7 +129,7 @@ export default defineComponent({
     }
   },
   components: {
-    Comment,
+    CommentPage,
   },
   methods: {
 
