@@ -6,6 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.forms.models import model_to_dict
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
+import json
 
 
 from .models import User, Profile, Article, Comment
@@ -111,19 +113,48 @@ def registerUser(request):
     return render(request, "api/spa/login_register.html", context)
 
 
-def get_profile(request):
-    if request.user.is_authenticated:
-        profile = Profile.objects.get(user=request.user)
-        return JsonResponse(
-            {
-                "username": request.user.username,
-                "email": request.user.email,
-                "full_name": profile.full_name,
-                "bio": profile.bio,
-                "image": profile.image.url if profile.image else None,
-            }
-        )
-    return JsonResponse({"error": "Not authenticated"}, status=401)
+@login_required
+def get_profile(request: HttpRequest) -> JsonResponse:
+    user = request.user
+    try:
+        profile = Profile.objects.get(user=user)
+        favorite_categories = json.loads(profile.favorite_categories)
+
+        profile_data = {
+            "username": user.username,
+            "email": user.email,
+            "full_name": profile.full_name,
+            "bio": profile.bio,
+            "date_of_birth": profile.date_of_birth.strftime("%Y-%m-%d") if profile.date_of_birth else None,
+            "image": profile.image.url if profile.image else None,
+            "favorite_categories": favorite_categories
+        }
+
+        return JsonResponse(profile_data)
+    except Profile.DoesNotExist:
+        return JsonResponse({"error": "Profile not found"}, status=404)
+    
+@csrf_exempt
+@login_required
+@require_http_methods(["PUT"])
+def update_profile(request):
+    user = request.user
+    profile = user.profile
+    data = json.loads(request.body)
+
+    # Update user and profile fields
+    user.email = data.get('email', user.email)
+    profile.full_name = data.get('full_name', profile.full_name)
+    profile.bio = data.get('bio', profile.bio)
+    profile.date_of_birth = data.get('date_of_birth', profile.date_of_birth)
+    
+    # Update favorite categories
+    favorite_categories = data.get('favorite_categories', [])
+    profile.favorite_categories = json.dumps(favorite_categories)
+
+    user.save()
+    profile.save()
+    return JsonResponse({"status": "success", "message": "Profile updated successfully"})
 
 
 def get_articles(request):

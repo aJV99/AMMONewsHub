@@ -1,14 +1,47 @@
-<!-- ProfilePage.vue -->
 <template>
-    <div v-if="profile">
-      <h1>Profile</h1>
-      <p>Username: {{ profile.username }}</p>
-      <p>Email: {{ profile.email }}</p>
-      <p>Full Name: {{ profile.full_name }}</p>
-      <p>Bio: {{ profile.bio }}</p>
-      <img :src="profile.image" v-if="profile.image" />
-    </div>
-  </template>
+  <div v-if="profile" class="mt-4">
+    <h1>Profile</h1>
+    <form @submit.prevent="updateProfile" class="form">
+      <div class="form-group pb-4">
+        <label for="username">Username:</label>
+        <input type="text" id="username" v-model="profile.username" class="form-control" disabled />
+      </div>
+      <div class="form-group pb-4">
+        <label for="email">Email:</label>
+        <input type="email" id="email" v-model="profile.email" class="form-control" />
+      </div>
+      <div class="form-group pb-4">
+        <label for="fullName">Full Name:</label>
+        <input type="text" id="fullName" v-model="profile.full_name" class="form-control" />
+      </div>
+      <div class="form-group pb-4">
+        <label for="bio">Bio:</label>
+        <textarea id="bio" v-model="profile.bio" class="form-control"></textarea>
+      </div>
+      <div class="form-group pb-4">
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob" v-model="profile.date_of_birth" class="form-control" />
+      </div>
+      <div class="form-group pb-4">
+        <label>Favorite Categories:</label>
+        <div v-for="category in allCategories" :key="category.id" class="form-check">
+          <input type="checkbox" 
+                :id="'category' + category.id" 
+                :value="category.name" 
+                v-model="profile.favorite_categories" 
+                class="form-check-input">
+          <label :for="'category' + category.id" class="form-check-label">{{ category.name }}</label>
+        </div>
+      </div>
+      <div class="form-group pb-4">
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+      </div>
+    </form>
+  </div>
+  <div v-else>
+    <p>Loading profile...</p>
+  </div>
+</template>
   
   <script lang="ts">
   import { defineComponent, onMounted, ref, watch } from 'vue';
@@ -29,10 +62,30 @@
               profile.value = newProfile;
           });
   
-          return {
-              profile
+          const updateProfile = async () => {
+              console.log(profile.value);
+              if (profile.value) {
+                  await userProfileStore.updateProfile(profile.value);
+              }
           };
-      }
+  
+          return {
+              profile,
+              updateProfile
+          };
+      },
+      data() {
+        return {
+            // Replace this with your actual categories data source
+            allCategories: [
+                { id: 1, name: 'Sports' },
+                { id: 2, name: 'World News' },
+                { id: 3, name: 'Technology' },
+                { id: 4, name: 'Health & Wellness' },
+                { id: 5, name: 'Entertainment' },
+            ]
+        };
+    },
   });
   </script>
   

@@ -14,31 +14,30 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
-
 class Profile(models.Model):
     """
     We create a OneToOne relationship between User and Profile
     because we want One User to have only One Profile
     """
-
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-
-    full_name = models.CharField(max_length=300)
-    bio = models.CharField(max_length=300)
-    image = models.ImageField(
-        default="profiles/defaultprofile.jpeg", upload_to="profiles/"
-    )
+    full_name = models.CharField(max_length=300, null=True, blank=True)
+    bio = models.CharField(max_length=300, null=True, blank=True)
+    date_of_birth = models.DateField(null=True, blank=True)
+    image = models.ImageField(default="profiles/defaultprofile.jpeg", upload_to="profiles/")
+    favorite_categories = models.TextField(default="[]")
 
     def __str__(self):
-        return self.full_name
+        return self.full_name or self.user.username
 
 
 class Article(models.Model):
     Article_title = models.CharField(max_length=200)
     Article_summary = models.CharField(max_length=200)
-    Article_category = models.CharField(max_length=200)
+    Article_category = models.CharField(max_length=300, null=True, blank=True)
     Article_date = models.DateField()
 
+    def __str__(self):
+        return self.Article_title
 
 """
 Automatically create a profile for a user whenever they 
