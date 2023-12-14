@@ -3,12 +3,13 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import { Article } from "../interfaces/Articles";
 import { Comment } from "../interfaces/Comments";
+import { inject } from "vue";
 
 export const useArticleStore = defineStore("articles", () => {
   const Articles = ref<Article[] | null>(null);
   const Comments = ref<Map<number, Comment[]>>(new Map());
-  // make backendUrl="http://localhost:8000" for local frontend testing
-  const backedUrl = "";
+
+  const backedUrl = inject("backend_url");
 
   async function fetchArticles() {
     try {
