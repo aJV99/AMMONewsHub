@@ -15,6 +15,13 @@
         <input type="text" id="fullName" v-model="profile.full_name" class="form-control" />
       </div>
       <div class="form-group pb-4">
+        <label for="profileImage">Profile Image:</label>
+        <input type="file" id="profileImage" @change="uploadImage" class="form-control" />
+        <img :src="profile.image" alt="Profile Image" v-if="profile.image" class="profile-image" />
+        <br>
+        <button @click.prevent="resetImage" class="btn btn-secondary mt-2">Reset to Default</button>
+      </div>
+      <div class="form-group pb-4">
         <label for="bio">Bio:</label>
         <textarea id="bio" v-model="profile.bio" class="form-control"></textarea>
       </div>
@@ -68,11 +75,26 @@
                   await userProfileStore.updateProfile(profile.value);
               }
           };
-  
-          return {
-              profile,
-              updateProfile
+
+          const uploadImage = async (event: Event) => {
+            const input = event.target as HTMLInputElement;
+            if (!input.files?.length) {
+              return;
+            }
+            const file = input.files[0] as File;  // File type is specified here
+            await userProfileStore.uploadProfileImage(file);
           };
+
+          const resetImage = async () => {
+            await userProfileStore.resetProfileImageToDefault();
+          };
+
+        return {
+            profile,
+            updateProfile,
+            uploadImage,
+            resetImage
+        };
       },
       data() {
         return {
@@ -88,4 +110,11 @@
     },
   });
   </script>
-  
+
+<style>
+.profile-image {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+}
+</style>

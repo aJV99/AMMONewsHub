@@ -40,7 +40,7 @@ export const useUserProfileStore = defineStore("userProfile", () => {
     if (!csrfToken) {
       console.error('CSRF token not found');
       return;
-  }
+    }
     try {
         const response = await fetch(`/profile/update/`, {
           method: 'PUT',
@@ -57,9 +57,66 @@ export const useUserProfileStore = defineStore("userProfile", () => {
     } catch (error) {
         // Handle errors
     }
+  }
 
-    
-}
+  async function uploadProfileImage(file: File) {
+    if (!file) {
+      console.error('No file provided');
+      return;
+    }
 
-  return { profile, fetchUserProfile, updateProfile };
+    const formData = new FormData();
+    formData.append('image', file);
+
+    const csrfToken = getCsrfToken(); 
+    if (!csrfToken) {
+      console.error('CSRF token not found');
+      return;
+    }
+    try {
+      const response = await fetch('/profile/upload-image/', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRFToken': csrfToken
+        },
+        credentials: 'include'
+      });
+      if (response.ok) {
+        const data = await response.json();
+        if (profile.value) {
+          profile.value.image = data.image_url; // Update the profile image URL in the store
+        }
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    }
+  }
+
+  async function resetProfileImageToDefault() {
+    const csrfToken = getCsrfToken(); 
+    if (!csrfToken) {
+      console.error('CSRF token not found');
+      return;
+    }
+    try {
+      const response = await fetch('/profile/reset-image/', {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': csrfToken
+        },
+        credentials: 'include'
+      });
+      if (response.ok) {
+        const data = await response.json();
+        if (profile.value) {
+          profile.value.image = data.image_url; // Update the profile image URL in the store
+        }
+      }
+    } catch (error) {
+      console.error('Error resetting image:', error);
+    }
+  }
+  
+  return { profile, fetchUserProfile, updateProfile, uploadProfileImage, resetProfileImageToDefault };
 });

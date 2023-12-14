@@ -1,4 +1,5 @@
 import json
+import os
 from django.http import HttpResponse, HttpRequest, JsonResponse, HttpResponseNotAllowed
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
@@ -8,6 +9,8 @@ from django.forms.models import model_to_dict
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 import json
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
 
 
 from .models import User, Profile, Article, Comment
@@ -155,6 +158,44 @@ def update_profile(request):
     user.save()
     profile.save()
     return JsonResponse({"status": "success", "message": "Profile updated successfully"})
+
+@csrf_exempt
+@login_required
+def upload_profile_image(request):
+    if request.method == 'POST':
+        user = request.user
+        profile = user.profile
+
+        # Handle the uploaded file
+        if 'image' in request.FILES:
+            image = request.FILES['image']
+            file_extension = os.path.splitext(image.name)[1]
+            file_name = f"profiles/{user.username}{file_extension}"
+            saved_file_path = default_storage.save(f"images/{file_name}", ContentFile(image.read()))
+
+            # Update the profile image path
+            profile.image = f"images/{file_name}"
+            profile.save()
+
+            return JsonResponse({"status": "success", "image_url": default_storage.url(saved_file_path)})
+
+        return JsonResponse({"status": "error", "message": "No image file provided"}, status=400)
+
+    return HttpResponseNotAllowed(['POST'])
+
+@login_required
+def reset_profile_image_to_default(request):
+    if request.method == 'POST':
+        user = request.user
+        profile = user.profile
+
+        # Set to default image
+        profile.image = "profiles/defaultprofile.jpeg"  # Adjust the path if necessary
+        profile.save()
+
+        return JsonResponse({"status": "success", "image_url": profile.image.url})
+
+    return HttpResponseNotAllowed(['POST'])
 
 
 def get_articles(request):

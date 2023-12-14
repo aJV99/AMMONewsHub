@@ -7,6 +7,6 @@ export interface Profile {
     email: string;
     date_of_birth: Date;
     bio: string;
-    image?: string;
+    image: string;
     favorite_categories: Category[];
 }
