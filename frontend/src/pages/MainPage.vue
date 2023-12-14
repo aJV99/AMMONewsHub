@@ -6,10 +6,12 @@
 
   <div v-if="profile">
     <div v-if="profile.favorite_categories.length !== 0">
-      {{ console.log(profile.favorite_categories) }}
-      <div v-for="article in Articles" :key="article.id" >
+      <div>
+        <p>These articles are filtered from your choices!</p>
+      </div>
+      <div v-for="article in Articles" :key="article.id" class="container text-center w-50 mx-auto mb-4">
         <div v-if="profile.favorite_categories.includes(article.Article_category)"  class="card mb-4">
-        <router-link :to="`/article/${article.id}`">
+        <router-link :to="`/article/${article.id}`" style="text-decoration: none;">
           <div class="card-header bg-warning text-light">
             <p class="font-weight-bold">{{ article.Article_title }}</p>
           </div>
