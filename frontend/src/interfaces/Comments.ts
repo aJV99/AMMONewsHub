@@ -6,4 +6,5 @@ export interface Comment {
   text: string;
   created: Date;
   updated: Date;
+  children: Comment[] | null;
 }

@@ -9,8 +9,6 @@ import OtherPage from "../pages/OtherPage.vue";
 import ProfilePage from "../pages/ProfilePage.vue";
 import ArticlePage from "../pages/ArticlePage.vue";
 import { useArticleStore } from "../stores/articleStore";
-import { useCommentsStore } from "../stores/commentsStore";
-import { queuePostFlushCb } from "vue";
 
 let base =
   import.meta.env.MODE == "development" ? import.meta.env.BASE_URL : "";

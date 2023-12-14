@@ -24,7 +24,7 @@
     </div>
     <ul v-if="node.children && node.children.length">
       <li v-for="child in node.children" :key="child.id">
-        <Comment :node="child" :deleteItem="deleteItem" :addComment="addComment" />
+        <CommentPage :node="child" :deleteItem="deleteItem" :addComment="addComment" />
       </li>
     </ul>
   </div>
@@ -49,7 +49,7 @@ export default defineComponent({
   components: {
     Reply
   },
-  name: "Comment",
+  name: "CommentPage",
   props: {
     node: {
       type: Object,
