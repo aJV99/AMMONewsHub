@@ -8,40 +8,60 @@
     <div v-if="profile.favorite_categories.length !== 0">
       {{ console.log(profile.favorite_categories) }}
       <div v-for="article in Articles" :key="article.id" >
-        <div v-if="profile.favorite_categories.includes(article.Article_category)" class="container border border-dark text-center mb-5 w-25">
+        <div v-if="profile.favorite_categories.includes(article.Article_category)"  class="card mb-4">
         <router-link :to="`/article/${article.id}`">
-          <p>{{ article.id }}</p>
-          <p class="font-weight-bold">{{ article.Article_title }}</p>
-          <p>{{ article.Article_summary }}</p>
-          <p>{{ article.Article_category }}</p>
-          <p class="font-italic">{{ article.Article_date }}</p>
+          <div class="card-header bg-warning text-light">
+            <p class="font-weight-bold">{{ article.Article_title }}</p>
+          </div>
+          <div class="card-body">
+            <p><strong>Category:</strong> {{ article.Article_category }}</p>
+            <p>{{ article.Article_summary }}</p>
+          </div>
+          <div class="card-footer text-muted">
+              {{ article.Article_date }}
+          </div>
         </router-link>
         </div>
       </div>
     </div>
     <div v-else>
-      <div v-for="article in Articles" :key="article.id" class="container border border-dark text-center mb-5 w-25">
-        <router-link :to="`/article/${article.id}`">
-          <p>{{ article.id }}</p>
-          <p class="font-weight-bold">{{ article.Article_title }}</p>
-          <p>{{ article.Article_summary }}</p>
-          <p>{{ article.Article_category }}</p>
-          <p class="font-italic">{{ article.Article_date }}</p>
+      <div v-for="article in Articles" :key="article.id" class="container text-center w-50 mx-auto mb-4">
+        <router-link :to="`/article/${article.id}`" style="text-decoration: none;">
+          <div class="card">
+            <div class="card-header bg-warning text-light">
+              {{ article.Article_title }}
+            </div>
+            <div class="card-body">
+              <p><strong>Category:</strong> {{ article.Article_category }}</p>
+              <p>{{ article.Article_summary }}</p>
+            </div>
+            <div class="card-footer text-muted">
+              {{ article.Article_date }}
+            </div>
+          </div>
         </router-link>
-        </div>
-  </div> 
+      </div>
+    </div>
   </div>
   <div v-else>
-      <div v-for="article in Articles" :key="article.id" class="container border border-dark text-center mb-5 w-25">
-        <router-link :to="`/article/${article.id}`">
-          <p>{{ article.id }}</p>
-          <p class="font-weight-bold">{{ article.Article_title }}</p>
-          <p>{{ article.Article_summary }}</p>
-          <p>{{ article.Article_category }}</p>
-          <p class="font-italic">{{ article.Article_date }}</p>
+      <div v-for="article in Articles" :key="article.id" class="container text-center w-50 mx-auto mb-4">
+        <router-link :to="`/article/${article.id}`" style="text-decoration: none;">
+          <div class="card">
+            <div class="card-header bg-warning text-light">
+              {{ article.Article_title }}
+            </div>
+            <div class="card-body">
+              <p><strong>Category:</strong> {{ article.Article_category }}</p>
+              <p>{{ article.Article_summary }}</p>
+            </div>
+            <div class="card-footer text-muted">
+              {{ article.Article_date }}
+            </div>
+          </div>
         </router-link>
-        </div>
-  </div> 
+      </div>
+    </div>
+   
   
 
 </template>

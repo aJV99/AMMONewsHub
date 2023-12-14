@@ -9,6 +9,7 @@ import OtherPage from "../pages/OtherPage.vue";
 import ProfilePage from "../pages/ProfilePage.vue";
 import ArticlePage from "../pages/ArticlePage.vue";
 import { useArticleStore } from "../stores/articleStore";
+import { useUserProfileStore } from "../stores/userProfile";
 
 let base =
   import.meta.env.MODE == "development" ? import.meta.env.BASE_URL : "";
@@ -26,10 +27,16 @@ const router = createRouter({
       component: MainPage,
       beforeEnter: async (_to, _from, next) => {
         console.log("main before enter");
+        const profileStore = useUserProfileStore();
+        if (!profileStore.profile) {
+          await profileStore.fetchUserProfile();
+        }
+        
         const articleStore = useArticleStore();
         if (!articleStore.Articles) {
           await articleStore.fetchArticles();
         }
+
         next();
       },
     },
