@@ -32,7 +32,7 @@ class Profile(models.Model):
 
 class Article(models.Model):
     Article_title = models.CharField(max_length=200)
-    Article_summary = models.CharField(max_length=200)
+    Article_summary = models.TextField()
     Article_category = models.CharField(max_length=300, null=True, blank=True)
     Article_date = models.DateField()
 

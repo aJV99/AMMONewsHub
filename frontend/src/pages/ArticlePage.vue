@@ -3,34 +3,7 @@
     {{ article?.Article_title }}
   </div>
   <div class="bg-new p-2 m-2 mb-3 ">
-    <p>{{ article?.Article_summary }} Great Britain's most successful female Olympian Dame Laura Kenny believes women
-      athletes can struggle to get pregnant because of their lifestyle.
-
-      Kenny, 31, won five gold medals and one silver across three Olympic Games at London 2012, Rio 2016 and Tokyo 2020.
-
-      The mum-of-two is targeting a fourth Games in Paris next year.
-
-      Kenny says she has had "many conversations" with athletes suffering with Relative Energy Deficiency in Sport.
-
-      Known as Red-S, the condition occurs when athletes expend more energy in training than they consume through food and
-      drink and one of the key symptoms in women is the absence of periods.
-
-      5 Live Sport podcast: All About - The Laura and Jason Kenny one
-      Several sportswomen have spoken about their experience with Red-S, including athletes Anna Boniface, Bobby Clay and
-      Pippa Woolven and mountain bike racer Evie Richards.
-
-      "There are females that have struggled and will struggle to get pregnant because of the lifestyle of being an
-      athlete," Kenny, who does not have the condition, told BBC Radio 5 Live Breakfast.
-
-      "We've all heard of Red-S - being females losing their periods. You're not going to be able to fall pregnant if you
-      haven't got a period.
-
-      "It's actually a really unhealthy lifestyle that these females can't have kids and it's actually really sad.
-
-      "I've always consistently had a period but the amount of conversations I've heard of people having Red-S.
-
-      "Red-S is actually really dangerous... these people are giving up lots of things that really deep down they want."
-    </p>
+    <p>{{ article?.Article_summary }}</p>
   </div>
   <h4>Comments</h4>
 
