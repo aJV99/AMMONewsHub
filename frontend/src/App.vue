@@ -11,9 +11,6 @@
               <router-link class="nav-link text-white font-weight-bold" :to="{name: 'Main Page'}">Home</router-link>
             </li>
             <li class="nav-item">
-              <router-link class="nav-link text-white font-weight-bold" :to="{name: 'Other Page'}">Other Page</router-link>
-            </li>
-            <li class="nav-item">
               <router-link class="nav-link text-white font-weight-bold" :to="{name: 'Profile Page'}">Profile</router-link>
             </li>
           </ul>

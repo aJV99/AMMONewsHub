@@ -27,7 +27,7 @@ AMMO News Hub is a Single Page Application (SPA) developed using Django for the 
 
 The application has been deployed to EECS's OpenShift platform. You can access it at the following URL:
 
-[AMMO News Hub](http://ammo-newshub.openshift.eecs.qmul.ac.uk/)
+[Group 50 AMMO News Hub Link](https://group50-web-apps-ec20333.apps.a.comp-teach.qmul.ac.uk/)
 
 ### **Admin Access**
 
@@ -36,11 +36,11 @@ The application has been deployed to EECS's OpenShift platform. You can access i
 
 ### **Test Users**
 
-1. **Username**: testuser1 | **Password**: [TestUser1Password]
-2. **Username**: testuser2 | **Password**: [TestUser2Password]
-3. **Username**: testuser3 | **Password**: [TestUser3Password]
-4. **Username**: testuser4 | **Password**: [TestUser4Password]
-5. **Username**: testuser5 | **Password**: [TestUser5Password]
+1. **Username**: marco | **Password**: [testpass1]
+2. **Username**: abbas | **Password**: [testpass1]
+3. **Username**: oryna | **Password**: [testpass1]
+4. **Username**: milena | **Password**: [testpass1]
+5. **Username**: john | **Password**: [testpass1]
 
 ---
 
@@ -59,7 +59,7 @@ Follow these steps to run the project on your local machine:
 
 ## **Contributors**
 
-- [Abbas Alibhai](https://github.com/aJV99)
-- [Marco Giovanni Solari](https://github.com/Ms2302)
-- [Milena Serych](https://github.com/milenaserych)
-- [Oryna Goichuk](https://github.com/orynamg)
+- [Abbas Alibhai - ec20660](https://github.com/aJV99) - Responsible for creating the Profile Page and its and its subsequent functionality, including the uploading of images to the backend. Also assisted in deployment.
+- [Marco Giovanni Solari - ec20333](https://github.com/Ms2302) - Responsible for creating Main Articles page and its subsequent functionality, and filtering news based on the user's favourite categories. Also assisted in deployment.
+- [Milena Serych - ec211006]( https://github.com/milenaserych) - Responsible for database modelling and backend setup as well as setting up the Login and Registration pages and functionality. Also assisted in styling.
+- [Oryna Goichuk - ec20251](https://github.com/orynamg) - Responsible for the detailed Article page and its subsequent functionality, as well as creating the Commenting and Replying functionality. Also assisted in styling.

@@ -65,6 +65,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5173",
     "http://localhost:5173",
+    "https://group50-web-apps-ec20333.apps.a.comp-teach.qmul.ac.uk"
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -74,6 +75,7 @@ SESSION_COOKIE_HTTPONLY = False
 CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:5173",
     "http://localhost:5173",
+    "https://group50-web-apps-ec20333.apps.a.comp-teach.qmul.ac.uk"
 ]
 
 ROOT_URLCONF = "project.urls"
